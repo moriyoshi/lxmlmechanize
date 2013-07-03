@@ -25,8 +25,8 @@ setup(name='lxmlmechanize',
       description="",
       long_description=long_description,
       classifiers=[
-        "Topic :: Internet"
-        "Topic :: Internet :: WWW/HTTP"
+        "Topic :: Internet",
+        "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Browsers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
