@@ -5,3 +5,8 @@ Changelog
 --------------------
 
 - Initial
+
+0.0.1
+--------------------
+
+- Store the headers and HTTP status of the last request to Mechanize object as ``headers`` and ``status`` respectively.

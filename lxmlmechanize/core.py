@@ -41,6 +41,8 @@ class Mechanize(object):
         self.page = None
         self.location = None
         self.loader = None
+        self.status = None
+        self.headers = None
         self.default_encoding = default_encoding
         self.handle_meta_refresh = handle_meta_refresh
         if opener is None:
@@ -51,6 +53,7 @@ class Mechanize(object):
         if parser_factory is None:
             parser_factory = ParserFactory(OurHTMLElementClassLookup())
         self.parser_factory = parser_factory
+
     @property
     def encoding(self):
         if self.page is not None:
@@ -63,6 +66,8 @@ class Mechanize(object):
             return
         f = self.loader()
         next_url = f.url
+        self.status = f.getcode()
+        self.headers = dict(f.headers)
         self.page = self._load_document(f, next_url)
         self.location = next_url
         meta_tags = self.page.root.findall('.//meta')
