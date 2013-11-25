@@ -114,7 +114,7 @@ class Mechanize(object):
             encoding = self.encoding
             queries = urlencoded_form_data(values)
             final_url = urljoin(url, '?' + queries)
-            return lambda: self.opener.open(urllib2.Request(final_url))
+            return self.create_loader(urllib2.Request(final_url))
         else:
             headers = None
             if enctype == FORM_URLENCODE_MIME_TYPE:
@@ -129,14 +129,17 @@ class Mechanize(object):
                     'Content-Type': '%s; boundary=%s' % (FORM_MULTIPART_MIME_TYPE,
                                                        boundary)
                     }
-            return lambda: self.opener.open(urllib2.Request(url, data=data, headers=headers))
+            return self.create_loader(urllib2.Request(url, data=data, headers=headers))
 
     def navigate(self, url):
         self.loader = self.fetch(url)
         self.reload()
 
     def fetch(self, url):
-        return lambda: self.opener.open(urljoin(self.location, url))
+        return self.create_loader(urllib2.Request(urljoin(self.location, url)))
+
+    def create_loader(self, request):
+        return lambda: self.opener.open(request)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

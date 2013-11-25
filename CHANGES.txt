@@ -10,3 +10,8 @@ Changelog
 --------------------
 
 - Store the headers and HTTP status of the last request to Mechanize object as ``headers`` and ``status`` respectively.
+
+0.0.2
+--------------------
+
+- Make the loader factory customizable
