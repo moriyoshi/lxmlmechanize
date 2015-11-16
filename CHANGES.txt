@@ -14,4 +14,10 @@ Changelog
 0.0.2
 --------------------
 
-- Make the loader factory customizable
+- Make the loader factory customizable.
+
+0.0.3
+--------------------
+
+- Fixed parsing of HTML5 document.
+
