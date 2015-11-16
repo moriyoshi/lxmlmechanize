@@ -51,6 +51,7 @@ setup(name='lxmlmechanize',
       tests_require=requires+tests_require,
       extras_require={
           "testing": requires+tests_require,
+          "html5": ['html5lib'],
       },
       test_suite='lxmlmechanize',
       entry_points="""

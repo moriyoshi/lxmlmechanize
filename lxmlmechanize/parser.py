@@ -14,10 +14,30 @@ XHTML_PUBLIC_IDS = [
     u"-//W3C//DTD XHTML 1.0 Frameset//EN",
     ]
 
-class ParserWrapper(object):
+class NativeParserWrapper(object):
     def __init__(self, impl, encoding):
         self.impl = impl
         self.encoding = encoding
+
+    def fromstring(self, doc_str, base_url=None, guess_charset=False, **kwargs):
+        if guess_charset:
+            raise NotImplemented('chardet not supported')
+        return etree.fromstring(doc_str, parser=self.impl, base_url=base_url, **kwargs)
+
+    @property
+    def error_log(self):
+        return self.impl.error_log
+
+
+class HTML5LibParserWrapper(object):
+    error_log = False
+
+    def __init__(self, impl, encoding):
+        self.impl = impl
+        self.encoding = encoding
+
+    def fromstring(self, doc_str, base_url=None, guess_charset=False, **kwargs):
+        return self.impl.parse(doc_str, encoding=self.encoding, useChardet=guess_charset)
 
 
 RE_STR_ATTRS = r'([\x09\x0a\x0d\x20]+(?P<name>[0-9a-zA-Z_-]+)(?:[\x09\x0a\x0d\x20]*=[\x09\x0a\x0d\x20]*(?P<value>"[^"]*"|[^\x09\x0a\x0d\x20="<>]*))?)'
@@ -166,15 +186,17 @@ class ParserFactory(object):
                         else:
                             parser = html.HTMLParser(encoding=encoding)
                 else:
-                    parser = html.HTML5Parser(encoding=encoding)
+                    from lxml.html.html5parser import HTMLParser as HTML5Parser
+                    parser = HTML5Parser()
+                    return HTML5LibParserWrapper(parser, encoding)
         elif content_type.type == 'application/xhtml+xml':
             parser = html.XHTMLParser(load_dtd=False, encoding=encoding)
 
         if parser is None:
-            parser = etree.HTMLParser(encoding=encoding)
+            parser = etree.HTMLParser()
 
         parser.set_element_class_lookup(self.element_class_lookup)
-        return ParserWrapper(parser, encoding)
+        return NativeParserWrapper(parser, encoding)
 
 class OurHtmlElement(etree.ElementBase, html.HtmlMixin):
     HTML = True

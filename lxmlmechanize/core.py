@@ -87,8 +87,8 @@ class Mechanize(object):
             content_type_str = 'text/html'
         content_type = MimeType.fromstring(content_type_str)
         parser_wrapper = self.parser_factory(content_type, doc_str, self.default_encoding)
-        doc = etree.fromstring(doc_str, parser=parser_wrapper.impl, base_url=source_url)
-        return HtmlDocument(doc, parser_wrapper.encoding, parser_wrapper.impl.error_log)
+        doc = parser_wrapper.fromstring(doc_str, base_url=source_url)
+        return HtmlDocument(doc, parser_wrapper.encoding, parser_wrapper.error_log)
 
     def submit_form(self, form, submit=None):
         self.loader = self.fetch_form(form, submit)
